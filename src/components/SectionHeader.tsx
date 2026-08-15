@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { SectionLabel } from './SectionLabel'
-import { headlineReveal, labelSlide, sectionHeaderContainer } from '../lib/motion'
+import { headlineReveal, labelWipe, sectionHeaderContainer } from '../lib/motion'
 
 type Props = {
   label: string
@@ -18,7 +18,7 @@ export function SectionHeader({ label, headline, className = '', headlineClassNa
       whileInView="show"
       viewport={{ once: true, margin: '-80px' }}
     >
-      <motion.div variants={labelSlide}>
+      <motion.div variants={labelWipe} className="overflow-hidden">
         <SectionLabel>{label}</SectionLabel>
       </motion.div>
       <div className="overflow-hidden">

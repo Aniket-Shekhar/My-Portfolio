@@ -1,50 +1,26 @@
-import { useEffect, useState } from 'react'
 import { SectionHeader } from '../SectionHeader'
 import { ProjectCard } from '../ProjectCard'
-import { site, type ProjectFromApi } from '../../content'
-import { fetchJson } from '../../lib/api'
-
-function LoadingState() {
-  return (
-    <p className="text-[var(--text-body)] font-extralight text-[var(--color-ash-gray)]" aria-live="polite">
-      Loading projects…
-    </p>
-  )
-}
+import { DataState } from '../DataState'
+import { Section } from '../Section'
+import { site } from '../../content'
+import { useApiData } from '../../hooks/useApiData'
+import type { ProjectFromApi } from '../../content'
 
 export function Projects() {
-  const [projects, setProjects] = useState<ProjectFromApi[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetchJson<ProjectFromApi[]>('/api/projects')
-      .then(setProjects)
-      .catch((e: Error) => setError(e.message))
-      .finally(() => setLoading(false))
-  }, [])
+  const { data: projects, loading, error, retry } = useApiData<ProjectFromApi>('/api/projects')
 
   return (
-    <section
-      id="projects"
-      className="py-[var(--spacing-section-y-mobile)] md:py-[var(--spacing-section-y)]"
-    >
-      <div className="mx-auto max-w-[var(--width-content)] px-6 md:px-8">
+    <Section id="projects">
+      <div className="mx-auto max-w-[var(--width-content)]">
         <SectionHeader
           label={site.projects.label}
           headline={site.projects.headline}
-          className="mb-12"
+          className="mb-10 md:mb-12"
         />
 
-        {loading ? <LoadingState /> : null}
-        {error ? (
-          <p className="text-[var(--text-body)] font-extralight text-[var(--color-ash-gray)]">
-            Could not load projects. Start the API server and run the seed script.
-          </p>
-        ) : null}
-        {!loading && !error ? (
-          <div className="scrollbar-none md:-mx-8 md:overflow-x-auto md:px-8 md:snap-x md:snap-mandatory">
-            <div className="md:flex md:gap-20">
+        <DataState loading={loading} error={error} onRetry={retry} skeletonRows={2}>
+          <div className="scrollbar-none md:-mx-4 md:overflow-x-auto md:px-4 md:snap-x md:snap-mandatory">
+            <div className="flex flex-col gap-8 md:flex-row md:gap-16">
               {projects.map((project, index) => (
                 <div
                   key={project._id}
@@ -55,8 +31,8 @@ export function Projects() {
               ))}
             </div>
           </div>
-        ) : null}
+        </DataState>
       </div>
-    </section>
+    </Section>
   )
 }

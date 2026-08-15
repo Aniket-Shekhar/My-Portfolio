@@ -7,9 +7,10 @@ Personal portfolio — MERN stack, dark editorial design. Web + Android develope
 ```bash
 npm install
 cp server/.env.example server/.env   # edit MONGODB_URI if needed
-npm run seed
 npm run dev
 ```
+
+MongoDB is auto-seeded on first server start when collections are empty. Run `npm run seed` manually to reset data.
 
 - **Site:** http://localhost:5173
 - **API:** http://localhost:5000

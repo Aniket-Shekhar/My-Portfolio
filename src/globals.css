@@ -2,43 +2,49 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors */
   --color-canvas: #000000;
   --color-white: #ffffff;
   --color-ash-gray: #9a9a9a;
   --color-silver-mist: #b8b8b8;
-  --color-electric-iris: #8052ff;
-  --color-saffron-spark: #f0b429;
-  --color-deep-verdant: #1a9e8f;
-  --color-magenta-flare: #d946ef;
-  --color-cerulean-pulse: #38bdf8;
+  --color-hairline: #212121;
+  --color-graphite: #4a4a4a;
 
-  /* Typography — font family */
   --font-sans: "Inter", system-ui, sans-serif;
 
-  /* Type scale (px) — use with font-weight rules in components */
-  --text-display: 7.0625rem; /* 113px */
-  --text-display-md: 4.875rem; /* 78px */
-  --text-heading-lg: 2.25rem; /* 36px */
-  --text-heading-xs: 1.6875rem; /* 27px */
-  --text-body: 1.125rem; /* 18px */
-  --text-nav: 0.875rem; /* 14px */
-  --text-caption: 0.75rem; /* 12px */
+  --text-display: 7.0625rem;
+  --text-display-md: 4.875rem;
+  --text-heading-lg: 2.25rem;
+  --text-heading-xs: 1.6875rem;
+  --text-body: 1.125rem;
+  --text-nav: 0.875rem;
+  --text-caption: 0.75rem;
 
-  /* Letter-spacing */
   --tracking-display: -0.04em;
   --tracking-nav: 0.025em;
 
-  /* Layout */
-  --width-content: 80rem; /* 1280px */
+  --width-content: 80rem;
+  --nav-height: 4.5rem;
 
-  /* Radii */
-  --radius-ui: 1.5rem; /* 24px — buttons, nav, image blocks */
-  --radius-pill: 9999px; /* tags only */
+  --radius-ui: 1.5rem;
+  --radius-pill: 9999px;
+  --radius-ghost-btn: 0.5rem;
 
-  /* Spacing (section rhythm) */
   --spacing-section-y: 7.5rem;
   --spacing-section-y-mobile: 5rem;
+  --spacing-section-x: 2rem;
+  --spacing-gap: 1.5rem;
+}
+
+:root {
+  --gradient-glow: radial-gradient(circle, #ffffff 0%, #4a4a4a 40%, #000000 75%);
+  --gradient-sheen: linear-gradient(135deg, #ffffff 0%, #9a9a9a 50%, #ffffff 100%);
+  --gradient-fade-edge: linear-gradient(
+    180deg,
+    #000000 0%,
+    transparent 15%,
+    transparent 85%,
+    #000000 100%
+  );
 }
 
 *,
@@ -64,13 +70,90 @@ body {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-electric-iris) 40%, transparent);
+  background: color-mix(in srgb, var(--color-white) 25%, transparent);
   color: var(--color-white);
+}
+
+[id] {
+  scroll-margin-top: var(--nav-height);
+}
+
+.text-sheen {
+  background: var(--gradient-sheen);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+@keyframes scanline-glitch {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  15% {
+    opacity: 0.55;
+    transform: translateX(2px);
+  }
+  30% {
+    opacity: 0.85;
+    transform: translateX(-1px);
+  }
+  45% {
+    opacity: 0.45;
+    transform: translateX(1px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pixel-dissolve {
+  0% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  25% {
+    opacity: 0.35;
+    filter: brightness(2.5);
+  }
+  50% {
+    opacity: 0.65;
+    filter: brightness(0.6);
+  }
+  75% {
+    opacity: 0.4;
+    filter: brightness(1.8);
+  }
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+.hover-scanline:hover {
+  animation: scanline-glitch 0.4s ease;
+}
+
+.hover-dissolve:hover {
+  animation: pixel-dissolve 0.45s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .hover-scanline:hover,
+  .hover-dissolve:hover {
+    animation: none;
   }
 }
 
@@ -81,4 +164,25 @@ body {
 
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}
+
+.skeleton-pulse {
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-pulse {
+    animation: none;
+    opacity: 0.45;
+  }
 }

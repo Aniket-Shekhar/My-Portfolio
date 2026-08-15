@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 import express from 'express'
 import cors from 'cors'
 import { connectDB } from './config/db.js'
+import { ensureSeed } from './lib/ensureSeed.js'
 import projectsRouter from './routes/projects.js'
 import experienceRouter from './routes/experience.js'
 import contactRouter from './routes/contact.js'
@@ -37,6 +38,7 @@ app.get('*', (req, res, next) => {
 async function start() {
   try {
     await connectDB(process.env.MONGODB_URI)
+    await ensureSeed()
     app.listen(PORT, () => {
       console.log(`Server listening on http://localhost:${PORT}`)
     })

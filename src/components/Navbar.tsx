@@ -14,7 +14,6 @@ const navLinks = [
 export function Navbar() {
   const [active, setActive] = useState('#hero')
   const [menuOpen, setMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     const ids = ['hero', 'about', 'projects', 'experience', 'contact']
@@ -31,27 +30,16 @@ export function Navbar() {
     return () => observer.disconnect()
   }, [])
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 48)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
   const scrollTo = (href: string) => {
     setMenuOpen(false)
     document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-transparent">
-      <div
-        className={`mx-auto flex max-w-[var(--width-content)] items-center justify-between gap-6 px-6 py-5 transition-[padding] duration-300 md:px-8 ${
-          scrolled ? 'py-4' : ''
-        }`}
-      >
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--color-hairline)] bg-[rgba(0,0,0,0.85)] backdrop-blur-[8px]">
+      <div className="mx-auto flex h-[var(--nav-height)] max-w-[var(--width-content)] items-center justify-between gap-6 px-[var(--spacing-section-x)]">
         <button type="button" onClick={() => scrollTo('#hero')} className="shrink-0">
-          <Logo compact={scrolled} />
+          <Logo compact />
         </button>
 
         <nav className="hidden flex-1 items-center justify-center gap-10 md:flex" aria-label="Primary">
@@ -60,7 +48,7 @@ export function Navbar() {
               key={link.href}
               type="button"
               onClick={() => scrollTo(link.href)}
-              className={`relative pb-1 text-[var(--text-nav)] font-semibold uppercase tracking-[var(--tracking-nav)] transition-colors ${
+              className={`hover-scanline relative pb-1 text-[var(--text-nav)] font-semibold uppercase tracking-[var(--tracking-nav)] transition-colors ${
                 active === link.href
                   ? 'text-[var(--color-white)]'
                   : 'text-[var(--color-ash-gray)] hover:text-[var(--color-white)]'
@@ -70,7 +58,7 @@ export function Navbar() {
               {active === link.href ? (
                 <motion.span
                   layoutId="nav-underline"
-                  className="absolute bottom-0 left-0 right-0 h-px bg-[var(--color-saffron-spark)]"
+                  className="absolute bottom-0 left-0 right-0 h-px bg-[var(--color-white)]"
                   transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                 />
               ) : null}
@@ -86,7 +74,7 @@ export function Navbar() {
 
         <button
           type="button"
-          className="md:hidden text-[var(--text-nav)] font-semibold uppercase tracking-[var(--tracking-nav)] text-[var(--color-white)]"
+          className="hover-scanline md:hidden text-[var(--text-nav)] font-semibold uppercase tracking-[var(--tracking-nav)] text-[var(--color-white)]"
           aria-expanded={menuOpen}
           aria-controls="mobile-nav"
           onClick={() => setMenuOpen((o) => !o)}
@@ -102,15 +90,15 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="bg-[var(--color-canvas)] md:hidden"
+            className="border-t border-[var(--color-hairline)] bg-[rgba(0,0,0,0.95)] md:hidden"
           >
-            <ul className="flex flex-col gap-4 px-6 py-6">
+            <ul className="flex flex-col gap-4 px-[var(--spacing-section-x)] py-6">
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <button
                     type="button"
                     onClick={() => scrollTo(link.href)}
-                    className="text-[var(--text-nav)] font-semibold uppercase tracking-[var(--tracking-nav)] text-[var(--color-ash-gray)]"
+                    className="hover-scanline text-[var(--text-nav)] font-semibold uppercase tracking-[var(--tracking-nav)] text-[var(--color-ash-gray)]"
                   >
                     {link.label}
                   </button>

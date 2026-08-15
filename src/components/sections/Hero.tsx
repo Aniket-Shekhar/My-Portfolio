@@ -1,14 +1,21 @@
-import { useRef } from 'react'
+import { useEffect, useRef, type MutableRefObject } from 'react'
 import { motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion'
 import { Button } from '../Button'
 import { ParticleConstellation } from '../ParticleConstellation'
+import { PixelHeroVideo } from '../PixelHeroVideo'
 import { StaggerWords } from '../StaggerWords'
+import { Section } from '../Section'
 import { site } from '../../content'
 import { fadeUp } from '../../lib/motion'
 
-export function Hero() {
+type Props = {
+  introProgressRef: MutableRefObject<number>
+}
+
+export function Hero({ introProgressRef }: Props) {
   const sectionRef = useRef<HTMLElement>(null)
   const dissolveRef = useRef(0)
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
@@ -18,39 +25,59 @@ export function Hero() {
     dissolveRef.current = v
   })
 
-  const headlineScale = useTransform(scrollYProgress, [0, 1], [1, 0.94])
-  const headlineY = useTransform(scrollYProgress, [0, 1], [0, -24])
+  const headlineScale = useTransform(scrollYProgress, [0, 1], [1, 0.96])
+  const headlineY = useTransform(scrollYProgress, [0, 1], [0, -16])
+
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      introProgressRef.current = 1
+      return
+    }
+
+    const start = performance.now()
+    const duration = 800
+
+    const animate = (now: number) => {
+      const p = Math.min(1, (now - start) / duration)
+      introProgressRef.current = p
+      if (p < 1) requestAnimationFrame(animate)
+    }
+
+    requestAnimationFrame(animate)
+  }, [introProgressRef])
 
   return (
-    <section
-      ref={sectionRef}
+    <Section
       id="hero"
-      className="relative min-h-[100dvh] overflow-hidden pt-28 pb-20 md:pt-32"
+      ref={sectionRef}
+      className="relative min-h-[100dvh] overflow-hidden pt-[calc(var(--nav-height)+2rem)] pb-16 md:pb-20"
     >
       <div className="absolute inset-0">
-        <ParticleConstellation dissolveRef={dissolveRef} />
+        <PixelHeroVideo />
+        <ParticleConstellation dissolveRef={dissolveRef} introProgressRef={introProgressRef} />
       </div>
 
-      <div className="relative mx-auto grid max-w-[var(--width-content)] gap-12 px-6 md:grid-cols-2 md:items-center md:px-8">
+      <div className="relative mx-auto grid max-w-[var(--width-content)] gap-12 md:grid-cols-2 md:items-center">
         <motion.div
           style={{ scale: headlineScale, y: headlineY }}
-          className="z-10 max-w-xl origin-top-left"
+          className="z-10 flex max-w-xl flex-col gap-6 origin-top-left"
         >
           <motion.p
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            transition={{ delay: 0.1 }}
-            className="mb-4 text-[var(--text-nav)] font-semibold uppercase tracking-[var(--tracking-nav)] text-[var(--color-saffron-spark)]"
+            transition={{ delay: 0.15 }}
+            className="text-[var(--text-nav)] font-semibold uppercase tracking-[var(--tracking-nav)]"
           >
-            {site.heroLabel}
+            <span className="text-sheen">{site.heroLabel}</span>
           </motion.p>
 
           <StaggerWords
             as="h1"
             text={site.name}
-            delay={0.2}
-            className="text-[clamp(3rem,8vw,7.0625rem)] font-normal leading-[0.95] tracking-[var(--tracking-display)] text-[var(--color-white)]"
+            delay={0.25}
+            className="text-[clamp(3rem,8vw,7.0625rem)] font-normal leading-[1.05] tracking-[var(--tracking-display)] text-[var(--color-white)]"
           />
 
           <motion.p
@@ -58,7 +85,7 @@ export function Hero() {
             initial="hidden"
             animate="show"
             transition={{ delay: 0.55 }}
-            className="mt-4 text-[clamp(1.5rem,3vw,2.25rem)] font-normal tracking-[var(--tracking-display)] text-[var(--color-silver-mist)]"
+            className="text-[clamp(1.25rem,3vw,2.25rem)] font-normal leading-snug tracking-[var(--tracking-display)] text-[var(--color-silver-mist)]"
           >
             {site.role}
           </motion.p>
@@ -67,8 +94,8 @@ export function Hero() {
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            transition={{ delay: 0.7 }}
-            className="mt-8 max-w-md text-[var(--text-body)] font-extralight text-[var(--color-white)]"
+            transition={{ delay: 0.68 }}
+            className="max-w-md text-[var(--text-body)] font-extralight leading-relaxed text-[var(--color-white)]"
           >
             {site.heroSupporting}
           </motion.p>
@@ -77,8 +104,8 @@ export function Hero() {
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            transition={{ delay: 0.85 }}
-            className="mt-10"
+            transition={{ delay: 0.82 }}
+            className="pt-2"
           >
             <Button
               variant="primary"
@@ -90,6 +117,6 @@ export function Hero() {
         </motion.div>
         <div className="relative hidden min-h-[420px] md:block" aria-hidden />
       </div>
-    </section>
+    </Section>
   )
 }

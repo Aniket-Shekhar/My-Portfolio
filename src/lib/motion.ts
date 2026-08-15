@@ -34,14 +34,16 @@ export const sectionHeaderContainer = {
   },
 }
 
-export const labelSlide = {
-  hidden: { opacity: 0, x: -16 },
+export const labelWipe = {
+  hidden: { opacity: 0, x: '-100%' },
   show: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.5, ease: easeOut },
+    transition: { duration: 0.55, ease: easeOut },
   },
 }
+
+export const labelSlide = labelWipe
 
 export const headlineReveal = {
   hidden: { opacity: 0, y: '100%' },

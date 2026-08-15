@@ -2,6 +2,8 @@ import { FormEvent, useState } from 'react'
 import { motion } from 'framer-motion'
 import { SectionHeader } from '../SectionHeader'
 import { Button } from '../Button'
+import { ParticleConstellation } from '../ParticleConstellation'
+import { Section } from '../Section'
 import { site } from '../../content'
 import { fetchJson } from '../../lib/api'
 import { fadeUp, staggerContainer, staggerItem } from '../../lib/motion'
@@ -35,14 +37,15 @@ export function Contact() {
   }
 
   const inputClass =
-    'w-full rounded-[var(--radius-ui)] bg-transparent px-4 py-3 text-[var(--text-body)] font-extralight text-[var(--color-white)] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-electric-iris)] placeholder:text-[var(--color-ash-gray)]'
+    'w-full rounded-[var(--radius-ui)] bg-transparent px-4 py-3 text-[var(--text-body)] font-extralight text-[var(--color-white)] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-white)] placeholder:text-[var(--color-ash-gray)]'
 
   return (
-    <section
-      id="contact"
-      className="py-[var(--spacing-section-y-mobile)] md:py-[var(--spacing-section-y)]"
-    >
-      <div className="mx-auto max-w-[var(--width-content)] px-6 md:px-8">
+    <Section id="contact" divider={false} className="relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 opacity-60">
+        <ParticleConstellation sparse />
+      </div>
+
+      <div className="relative mx-auto max-w-[var(--width-content)]">
         <SectionHeader
           label={site.contact.label}
           headline={site.contact.headline}
@@ -109,7 +112,7 @@ export function Contact() {
             <motion.p
               variants={staggerItem}
               className={`text-[var(--text-body)] font-extralight ${
-                status === 'error' ? 'text-[var(--color-saffron-spark)]' : 'text-[var(--color-ash-gray)]'
+                status === 'error' ? 'text-[var(--color-silver-mist)]' : 'text-[var(--color-ash-gray)]'
               }`}
               role="status"
             >
@@ -126,35 +129,22 @@ export function Contact() {
           className="mt-14 flex flex-col gap-4 sm:flex-row sm:gap-10"
         >
           <motion.li variants={staggerItem}>
-            <a
-              href={`mailto:${site.contact.email}`}
-              className="inline-flex items-center gap-2 text-[var(--text-body)] font-extralight text-[var(--color-ash-gray)] hover:text-[var(--color-white)] transition-colors"
-            >
-              <span aria-hidden>✉</span> {site.contact.email}
-            </a>
+            <Button variant="ghost" href={`mailto:${site.contact.email}`}>
+              ✉ {site.contact.email}
+            </Button>
           </motion.li>
           <motion.li variants={staggerItem}>
-            <a
-              href={site.contact.github}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 text-[var(--text-body)] font-extralight text-[var(--color-ash-gray)] hover:text-[var(--color-white)] transition-colors"
-            >
+            <Button variant="ghost-outline" href={site.contact.github}>
               GitHub
-            </a>
+            </Button>
           </motion.li>
           <motion.li variants={staggerItem}>
-            <a
-              href={site.contact.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 text-[var(--text-body)] font-extralight text-[var(--color-ash-gray)] hover:text-[var(--color-white)] transition-colors"
-            >
+            <Button variant="ghost-outline" href={site.contact.linkedin}>
               LinkedIn
-            </a>
+            </Button>
           </motion.li>
         </motion.ul>
       </div>
-    </section>
+    </Section>
   )
 }
